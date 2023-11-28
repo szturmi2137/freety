@@ -1,10 +1,10 @@
 from tkinter import *
 import os
 import vlc
-import pyautogui
 from pytube import *
+from tkinter import Menu
 
-sciezka = 'muzyka/'
+sciezka = 'muzyka'
 i = 0
 
 nazwyutowru = []
@@ -64,11 +64,13 @@ def prev():
         aktualna.config(text=utwory[i])
         print(i)
 
-def vol():
+def vol(zmiennaponic=None):
     vol = int(suwak.get())
     print(vol)
-    pyautogui.press('volumedown', 100)
-    pyautogui.press('volumeup', int(vol/2))
+    # pyautogui.press('volumedown', 100)
+    # pyautogui.press('volumeup', int(vol/2))
+    media_player.get_media_player().audio_set_volume(vol)
+
     
 def download():
     global src, link
@@ -98,7 +100,7 @@ def faktycznepobieranie():
         
 
 okno = Tk()
-okno.title('Muaplay V1.4')
+okno.title('Muaplay V1.4beta01')
 okno.geometry('300x200')
 okno.resizable(0, 0)
 okno['padx'] = 10
@@ -114,15 +116,33 @@ stopy.grid(column=1, row=1)
 
 suwak = Scale(okno, from_=100, to=0)
 suwak.grid(column=0, row=2, sticky=E)
-
-potwierdzacz = Button(okno, text="głośność", command=vol)
-potwierdzacz.grid(column=0, row=2, sticky=W)
+suwak.bind("<ButtonRelease-1>", vol)
+suwak.set(50)
+vol()
 
 nastepny = Button(okno, text="Następny", padx=10, pady=5, command=next)
 nastepny.grid(column=2, row=1)
 
-pobierz = Button(okno, text="Pobierz", command=download)
-pobierz.grid(column=2, row=2, sticky=SE)
 
+#MENU
+
+menuglowne = Menu(okno)
+menupobierania = Menu(menuglowne, tearoff=0)
+menupobierania.add_command(label="YouTube", command=download)
+menuglowne.add_cascade(label="Pobierz", menu=menupobierania)
+
+menuustawien = Menu(menuglowne, tearoff=0)
+menuustawien.add_command(label="tryb nocny", command=0)
+menuustawien.add_separator()
+menuustawien.add_command(label="ustawienia", command=0)
+menuglowne.add_cascade(label="Ustawienia", menu=menuustawien)
+
+okno.config(menu=menuglowne)
 
 okno.mainloop()
+
+# TO DO:
+# -playlisty
+# -szufla i lub
+# -bez restartu na poczatku
+# -tryb nocny
