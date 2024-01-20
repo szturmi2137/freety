@@ -10,6 +10,10 @@ i = 0
 nazwyutowru = []
 utwory = []
 
+x = 1
+x + x = y
+print(y)
+
 for file_path in os.listdir(sciezka):
     if os.path.isfile(os.path.join(sciezka, file_path)):
         nazwyutowru.append("muzyka/" + file_path)
